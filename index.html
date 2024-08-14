@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Pedido</title>
+    <style>
+        body {
+            background: url('https://i.pinimg.com/564x/44/e1/1a/44e11a7962357467a0127de9ebce78bb.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: rgb(255, 255, 255);
+        }
+        #container {
+            width: 50%;
+            text-align: center;
+        }
+
+        nav{
+            margin-top: 13vh;
+        }
+
+        nav button {
+            font-size: 3vh;
+            padding: 6px;
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 10px;
+        }
+        #orderForm {
+            display: none;
+            margin-top: 20px;
+        }
+        #orderForm label, #orderForm select, #orderForm input, #orderForm button {
+            display: block;
+            margin: 10px auto;
+            font-weight: bold;
+        }
+        #orderForm select, #orderForm input {
+            width: 80%;
+            padding: 5px;
+        }
+        #orderForm button {
+            font-size: 2vh;
+            border-radius: 12px;
+            padding: 10px 20px;
+        }
+        #orderSummary {
+            margin-top: 20px;
+        }
+
+        footer{
+            
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <nav>
+            <button id="addOrderBtn">Adicionar um Pedido.</button>
+        </nav>
+        <div id="orderForm">
+            <label for="food">Escolha os espetos:</label>
+            <select id="food">
+                <option value="File">Filé</option>
+                <option value="Cupim">Cupim</option>
+                <option value="Coracao">Coração</option>
+                <option value="Frango">Frango</option>
+                <option value="Bananinha">Bananinha</option>
+                <option value="Fraldinha">Fraldinha</option>
+                <option value="Tulipa6">Tulipa de 6 unidades</option>
+                <option value="Tulipa12">Tulipa de 12 unidades</option>
+                <option value="MedalhaoFrango">Medalhão de frango</option>
+                <option value="MedalhaoCarne">Medalhão de Carne</option>
+                <option value="QueijoCoalho">Queijo coalho</option>
+            </select>
+            <label for="quantity">Quantidade:</label>
+            <input type="number" id="quantity" min="1" value="1">
+            <button id="addFoodBtn">Adicionar Comida</button>
+            <div id="orderSummary"></div>
+            <label for="table">Número da Mesa:</label>
+            <input type="number" id="table" min="1" value="1">
+            <button id="submitOrderBtn">Enviar Pedido</button>
+        </div>
+        <footer>
+            <p>&copy;By: Vitor</p>
+        </footer>
+    </div>
+    <script>
+        document.getElementById('addOrderBtn').addEventListener('click', function() {
+    document.getElementById('orderForm').style.display = 'block';
+});
+
+let order = [];
+
+document.getElementById('addFoodBtn').addEventListener('click', function() {
+    const food = document.getElementById('food').value;
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const existingItem = order.find(item => item.food === food);
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        order.push({ food, quantity });
+    }
+    updateOrderSummary();
+});
+
+document.getElementById('submitOrderBtn').addEventListener('click', function() {
+    const table = document.getElementById('table').value;
+    let message = `Pedido da Mesa ${table}:\n`;
+    order.forEach(item => {
+        message += `Espeto: ${item.food}, Quantidade: ${item.quantity}\n`;
+    });
+    const whatsappNumber = '71984445558';
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, '_blank');
+
+    // Limpa o formulário
+    order = [];
+    updateOrderSummary();
+    document.getElementById('food').value = '';
+    document.getElementById('quantity').value = 1;
+    document.getElementById('table').value = 1;
+    document.getElementById('orderForm').style.display = 'none';
+});
+
+function updateOrderSummary() {
+    const orderSummary = document.getElementById('orderSummary');
+    orderSummary.innerHTML = '<h3>Resumo do Pedido:</h3>';
+    order.forEach(item => {
+        orderSummary.innerHTML += `<p>Comida: ${item.food}, Quantidade: ${item.quantity}</p>`;
+    });
+}
+
+    </script>
+</body>
+</html>
